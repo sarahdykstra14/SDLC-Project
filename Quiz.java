@@ -1,9 +1,18 @@
 package sdlc;
-
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.IOException;
 public class Quiz extends javax.swing.JFrame {
+    Notes mainWindow;
     Question[] questions;
-    public Quiz() {
+    int index = 0;
+    int correct = 0;
+    public Quiz(Notes m) {
         initComponents();
+        questions = readFile();
+        txtFinal.setText("");
+        displayQuestion(questions[0]);
+        mainWindow = m;
     }
 
     /**
@@ -16,15 +25,20 @@ public class Quiz extends javax.swing.JFrame {
     private void initComponents() {
 
         btngrp1 = new javax.swing.ButtonGroup();
-        btngrp2 = new javax.swing.ButtonGroup();
-        btngrp3 = new javax.swing.ButtonGroup();
         title = new javax.swing.JLabel();
         lblq1 = new javax.swing.JLabel();
         btn1o1 = new javax.swing.JRadioButton();
         btn1o2 = new javax.swing.JRadioButton();
         btn1o3 = new javax.swing.JRadioButton();
         btn1o4 = new javax.swing.JRadioButton();
-        btnSubmit = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        txtResults = new javax.swing.JLabel();
+        txtCorrect = new javax.swing.JLabel();
+        txtScore = new javax.swing.JLabel();
+        txtCorrectScore = new javax.swing.JLabel();
+        txtTotalScore = new javax.swing.JLabel();
+        txtError = new javax.swing.JLabel();
+        txtFinal = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -50,76 +64,204 @@ public class Quiz extends javax.swing.JFrame {
         btngrp1.add(btn1o4);
         btn1o4.setText("Option 4");
 
-        btnSubmit.setText("Next");
+        btnNext.setText("Next");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("Previous");
+        txtResults.setText("Results");
+
+        txtCorrect.setText("Correct answer:");
+
+        txtScore.setText("Current Score:");
+
+        txtCorrectScore.setText("Correct /");
+
+        txtTotalScore.setText("Total");
+
+        jButton1.setText("Close");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblq1))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(title)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnNext)
+                                .addGap(51, 51, 51)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                                .addComponent(txtError, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(192, 192, 192))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtFinal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(156, 156, 156)
-                        .addComponent(title))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btn1o1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btn1o2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btn1o4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btn1o3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(jButton1)
-                        .addGap(88, 88, 88)
-                        .addComponent(btnSubmit)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtScore)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtCorrectScore)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtTotalScore)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btn1o3)
+                                    .addComponent(txtResults)
+                                    .addComponent(txtCorrect)
+                                    .addComponent(btn1o1)
+                                    .addComponent(btn1o4)
+                                    .addComponent(btn1o2)
+                                    .addComponent(lblq1))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(title)
-                .addGap(18, 18, 18)
-                .addComponent(lblq1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn1o1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn1o2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn1o3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn1o4)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSubmit)
-                    .addComponent(jButton1))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(title)
+                    .addComponent(txtFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(lblq1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn1o1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn1o2)
+                        .addGap(3, 3, 3)
+                        .addComponent(btn1o3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn1o4)
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnNext)
+                            .addComponent(txtError, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtResults)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCorrect)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                        .addComponent(txtScore)
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCorrectScore)
+                            .addComponent(txtTotalScore)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>                        
 
     private void btn1o1ActionPerformed(java.awt.event.ActionEvent evt) {                                       
-        // TODO add your handling code here:
+        
     }                                      
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Quiz().setVisible(true);
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {                                        
+
+        int selected;
+        if(btn1o1.isSelected() || btn1o2.isSelected() || btn1o3.isSelected() || btn1o4.isSelected()) {
+            txtError.setText("");
+            if(btn1o1.isSelected()) {
+                selected = 0;
             }
-        });
+            else if (btn1o2.isSelected()) {
+                selected = 1;
+            }
+            else if (btn1o3.isSelected()) {
+                selected = 2;
+            }
+            else {
+                selected = 3;
+            }
+            if(selected == questions[index].getAnswerIndex()) {
+                correct++;
+            }
+            if(index == 9) {
+                closeWindow();
+            }
+            txtCorrect.setText("Correct answer: \n" + questions[index].getOptions()[questions[index].getAnswerIndex()]);
+            index++;
+            displayQuestion(questions[index]);
+            txtTotalScore.setText("" + index);
+            txtCorrectScore.setText(correct + "/"); 
+            }          
+            else {
+                txtError.setText("Please select an option");
+            }
+    }                                       
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        mainWindow.setVisible(true);
+        this.setVisible(false);
+    }                                        
+    public void closeWindow() {
+        btn1o1.setVisible(false);
+        btn1o2.setVisible(false);
+        btn1o3.setVisible(false);
+        btn1o4.setVisible(false);
+        btnNext.setVisible(false);
+        txtCorrect.setVisible(false);
+        txtCorrectScore.setVisible(false);
+        txtScore.setVisible(false);
+        txtTotalScore.setVisible(false);
+        txtError.setVisible(false);
+        txtResults.setVisible(false);
+        title.setVisible(false);
+        lblq1.setVisible(false);
+        txtFinal.setText("You have completed the quiz!\nYour final score is " + correct + "/10" + "\nClose this window to return to the notes");
+    }
+    public Question[] readFile() {
+        Question[] qs = new Question[10];
+        try {
+            FileReader fr = new FileReader("src\\sdlc\\questions.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String q = br.readLine();
+            int counter = 0;
+            while(q != null) {
+                String option1 = br.readLine();
+                String option2 = br.readLine();
+                String option3 = br.readLine();
+                String option4 = br.readLine();
+                int answerIndex = Integer.parseInt(br.readLine());
+                qs[counter] = new Question(q, option1, option2, option3, option4, answerIndex);
+                q = br.readLine();
+                counter++;
+            }
+        }
+        catch(IOException e) {
+            
+        }
+        return qs;
+    }
+    public void displayQuestion(Question q) {
+        lblq1.setText(q.getQuestion());
+        btn1o1.setText(q.getOptions()[0]);
+        btn1o2.setText(q.getOptions()[1]);
+        btn1o3.setText(q.getOptions()[2]);
+        btn1o4.setText(q.getOptions()[3]);
     }
 
     // Variables declaration - do not modify                     
@@ -127,13 +269,17 @@ public class Quiz extends javax.swing.JFrame {
     private javax.swing.JRadioButton btn1o2;
     private javax.swing.JRadioButton btn1o3;
     private javax.swing.JRadioButton btn1o4;
-    private javax.swing.JButton btnSubmit;
+    private javax.swing.JButton btnNext;
     private javax.swing.ButtonGroup btngrp1;
-    private javax.swing.ButtonGroup btngrp2;
-    private javax.swing.ButtonGroup btngrp3;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel lblq1;
     private javax.swing.JLabel title;
+    private javax.swing.JLabel txtCorrect;
+    private javax.swing.JLabel txtCorrectScore;
+    private javax.swing.JLabel txtError;
+    private javax.swing.JLabel txtFinal;
+    private javax.swing.JLabel txtResults;
+    private javax.swing.JLabel txtScore;
+    private javax.swing.JLabel txtTotalScore;
     // End of variables declaration                   
 }
-
