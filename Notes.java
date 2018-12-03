@@ -37,6 +37,11 @@ public class Notes extends javax.swing.JFrame {
         public String getNote(int index){
             return sections[index][1];
         }
+        
+        //Returns title at the passed index
+        public String getTitle(int index) {
+            return sections[index][0];
+        }
     
         //Setter
         //Sets the title and note of the the passed index
@@ -45,6 +50,38 @@ public class Notes extends javax.swing.JFrame {
             sections[index][1] = note;
         }
     }
+    
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        //Set the note object by calling the readNote method
+        Notes note = readNote();
+        //if user selects section 1
+        if (cboxSections.getSelectedItem().equals("Section 1")) {
+            //Display title and note of section 1
+            txtNotesDisplay.setText(note.getTitle(0) + "\n\n" + note.getNote(0));
+        }//if user selects section 2
+        else if (cboxSections.getSelectedItem().equals("Section 2")) {
+            //Display title and note of section 2
+            txtNotesDisplay.setText(note.getTitle(1) + "\n\n" + note.getNote(1));
+        }//if user selects section 3
+        else if (cboxSections.getSelectedItem().equals("Section 3")) {
+            //Display title and note of section 3
+            txtNotesDisplay.setText(note.getTitle(2) + "\n\n" + note.getNote(2));
+        }//if user selects section 4
+        else if (cboxSections.getSelectedItem().equals("Section 4")) {
+            //Display title and note of section 4
+            txtNotesDisplay.setText(note.getTitle(3) + "\n\n" + note.getNote(3));
+        }//if user selects section 5
+        else if (cboxSections.getSelectedItem().equals("Section 5")) {
+            //Display title and note of section 5
+            txtNotesDisplay.setText(note.getTitle(4) + "\n\n" + note.getNote(4));
+        }//else
+        else {
+            //Display title and note of section 6
+            txtNotesDisplay.setText(note.getTitle(5) + "\n\n" + note.getNote(5));
+        }
+
+
+    }         
 
     
     @SuppressWarnings("unchecked")
